@@ -1,0 +1,21 @@
+node_modules/
+
+# Playwright test output
+test-results/
+playwright-report/
+blob-report/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# TypeScript/build output
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db
