@@ -1,5 +1,11 @@
 import { Locator, Page } from "playwright";
 
+export enum SortOptions {
+    "az" = "az",
+    "za" = "za",
+    "lohi" = "lohi",
+    "hilo" = "hilo"
+}
 
 export class InventoryPage {
 
@@ -30,10 +36,10 @@ export class InventoryPage {
         this.backpackAddButton = page.locator('[data-test="add-to-cart-sauce-labs-backpack"]');
         this.backpackRemoveButton = page.locator('[data-test="remove-sauce-labs-backpack"]');
         this.backpackTitle = page.locator('[data-test="item-4-title-link"]');
-        this.productTitle = page.locator('[data-test="inventory-item-name"]');
+        this.productTitle = page.locator('.inventory_item_label a');
         this.burgerMenu = page.locator('#react-burger-menu-btn');
         this.logoutButton = page.locator('#logout_sidebar_link');
-        this.productNames = page.locator('[data-test="inventory-item-name"]');
+        this.productNames = page.locator('.inventory_item_label a');
         this.productPrices = page.locator('[data-test="inventory-item-price"]');
 
     }
@@ -50,7 +56,7 @@ export class InventoryPage {
         await this.backpackTitle.click();
     }
 
-    async sortProducts(value: string) {
+    async sortProducts(value: SortOptions) {
         await this.sortDropdown.selectOption(value);
     }
 
@@ -67,11 +73,19 @@ export class InventoryPage {
         return await this.productNames.allInnerTexts();
     }
 
-    async getProductPrices(): Promise<number[]> {
-        const prices = await this.productPrices.allInnerTexts();
-        return prices.map(price =>
-            Number(price.replace('$', ''))
-        );
+    async getProductByName(productName: string) {
+        const productLocator = this.page.locator(`.inventory_item_label a[aria-label*="${productName}"]`);
+        return productLocator;
+    }
+
+    async selectProductByName(productName: string) {
+        const productLocator = await this.getProductByName(productName);
+        await productLocator.click();
+    }
+
+    async getProductDetailsContainer(){
+        return this.page.locator('.div.inventory_item_container');
+        
     }
 
 }
