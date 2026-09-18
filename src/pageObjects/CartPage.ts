@@ -41,4 +41,9 @@ export class CartPage {
     async refresh() {
         await this.page.reload();
     }
+
+    async getProductsCount() {
+
+        return this.cartItem.count();
+    }
 }

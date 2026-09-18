@@ -33,7 +33,7 @@ export class InventoryPage {
         this.shoppingCartBadge = page.locator('[data-test="shopping-cart-badge"]');
         this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
         this.sortDropdown = page.locator('[data-test="product-sort-container"]');
-        this.backpackAddButton = page.locator('[data-test="add-to-cart-sauce-labs-backpack"]');
+        this.backpackAddButton = page.locator('[data-test="add-to-cart-"]');
         this.backpackRemoveButton = page.locator('[data-test="remove-sauce-labs-backpack"]');
         this.backpackTitle = page.locator('[data-test="item-4-title-link"]');
         this.productTitle = page.locator('.inventory_item_label a');
@@ -44,12 +44,23 @@ export class InventoryPage {
 
     }
 
-    async addBackpack() {
-        await this.backpackAddButton.click();
+    async getProductByName(productName: string) {
+        const productLocator = this.productNames.filter({ hasText: productName });
+        return productLocator;
     }
 
-    async removeBackpack() {
-        await this.backpackRemoveButton.click();
+    async addProduct(productName: string) {
+        const productLocator = await this.getProductByName(productName);
+        const reestructureProductName = productName.toLowerCase().replace(/\s+/g, '-');
+        const addToCartButton = productLocator.locator('xpath=..').locator(`[data-test="add-to-cart-${reestructureProductName}"]`);
+        await addToCartButton.click();
+    }
+
+    async removeProduct(productName: string) {
+        const productLocator = await this.getProductByName(productName);
+        const reestructureProductName = productName.toLowerCase().replace(/\s+/g, '-');
+        const removeFromCartButton = productLocator.locator('xpath=..').locator(`[data-test="remove-${reestructureProductName}"]`);
+        await removeFromCartButton.click();
     }
 
     async openBackpack() {
@@ -73,10 +84,7 @@ export class InventoryPage {
         return await this.productNames.allInnerTexts();
     }
 
-    async getProductByName(productName: string) {
-        const productLocator = this.page.locator(`.inventory_item_label a[aria-label*="${productName}"]`);
-        return productLocator;
-    }
+
 
     async selectProductByName(productName: string) {
         const productLocator = await this.getProductByName(productName);

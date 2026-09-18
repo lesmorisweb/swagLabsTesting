@@ -21,14 +21,14 @@ test.describe("Inventory Flow", () => {
     })
 
     test('IN_02 - Verify if the Add Product button is working correctly', async ({ page }) => {
-        await inventoryPage.addBackpack();
+        await inventoryPage.addProduct("Sauce Labs Backpack");
         await expect(inventoryPage.shoppingCartBadge).toHaveText('1');
     })
 
     test('IN_03 - Verify if the Remove Product button is working correctly', async ({ page }) => {
-        await inventoryPage.addBackpack();
+        await inventoryPage.addProduct("Sauce Labs Backpack");
         await expect(inventoryPage.shoppingCartBadge).toHaveText('1');
-        await inventoryPage.removeBackpack();
+        await inventoryPage.removeProduct("Sauce Labs Backpack");
         await expect(inventoryPage.shoppingCartBadge).not.toBeVisible();
     })
 
